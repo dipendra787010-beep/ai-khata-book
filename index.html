@@ -1,71 +1,36 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-  <meta charset="UTF-8">
-  <title>AI Khata Book</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 {
-      color: #2c3e50;
-    }
-    button {
-      font-size: 24px;
-      padding: 20px 30px;
-      border-radius: 50%;
-      border: none;
-      background: green;
-      color: white;
-      cursor: pointer;
-    }
-    #text {
-      margin-top: 20px;
-      font-size: 20px;
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-    }
-  </style>
-</head>
-<body>
-
-<h1>🎙️ AI Khata Book</h1>
-<p>Mic dabao aur bolo</p>
-
-<button onclick="startListening()">🎤</button>
-
-<div id="text">Yahan bola hua likh ke aayega…</div>
-
 <script>
+let entries = JSON.parse(localStorage.getItem("khata")) || [];
+
 function startListening() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = new SpeechRecognition();
-
   recognition.lang = "hi-IN";
   recognition.start();
 
-  recognition.onresult = function(event) {
+  recognition.onresult = function (event) {
     const speechText = event.results[0][0].transcript;
-    document.getElementById("text").innerText = speechText;
-    speak("Entry mil gayi");
-  };
-
-  recognition.onerror = function() {
-    speak("Dobara koshish kijiye");
+    const date = new Date().toLocaleString("hi-IN");
+entries.push(date + " | " + speechText);
+    localStorage.setItem("khata", JSON.stringify(entries));
+    showEntries();
+    speak("Entry save ho gayi");
   };
 }
 
-function speak(message) {
-  const speech = new SpeechSynthesisUtterance(message);
-  speech.lang = "hi-IN";
-  window.speechSynthesis.speak(speech);
+function showEntries() {
+  const div = document.getElementById("text");
+  div.innerHTML = "<h3>Sabhi Entries:</h3>";
+  entries.forEach((e, i) => {
+    div.innerHTML += `<p>${i + 1}. ${e}</p>`;
+  });
 }
+
+function speak(msg) {
+  const s = new SpeechSynthesisUtterance(msg);
+  s.lang = "hi-IN";
+  speechSynthesis.speak(s);
+}
+
+showEntries();
 </script>
 
-</body>
-</html>
