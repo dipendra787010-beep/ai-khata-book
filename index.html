@@ -3,6 +3,12 @@ let entries = JSON.parse(localStorage.getItem("khata")) || [];
 
 function startListening() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Aapke browser me voice support nahi hai");
+    return;
+  }
+
   const recognition = new SpeechRecognition();
   recognition.lang = "hi-IN";
   recognition.start();
@@ -10,16 +16,23 @@ function startListening() {
   recognition.onresult = function (event) {
     const speechText = event.results[0][0].transcript;
     const date = new Date().toLocaleString("hi-IN");
-entries.push(date + " | " + speechText);
+
+    entries.push(date + " | " + speechText);
     localStorage.setItem("khata", JSON.stringify(entries));
+
     showEntries();
     speak("Entry save ho gayi");
+  };
+
+  recognition.onerror = function () {
+    speak("Dobara koshish kijiye");
   };
 }
 
 function showEntries() {
   const div = document.getElementById("text");
   div.innerHTML = "<h3>Sabhi Entries:</h3>";
+
   entries.forEach((e, i) => {
     div.innerHTML += `<p>${i + 1}. ${e}</p>`;
   });
@@ -28,7 +41,7 @@ function showEntries() {
 function speak(msg) {
   const s = new SpeechSynthesisUtterance(msg);
   s.lang = "hi-IN";
-  speechSynthesis.speak(s);
+  window.speechSynthesis.speak(s);
 }
 
 showEntries();
