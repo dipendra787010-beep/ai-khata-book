@@ -1,3 +1,19 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<title>AI Khata Book</title>
+<style>
+body { font-family: Arial; margin: 20px; }
+button { font-size: 18px; padding: 10px; margin-bottom: 20px; }
+#text { margin-top: 20px; }
+</style>
+</head>
+<body>
+<h2>AI Khata Book</h2>
+<button onclick="startListening()">🎤 Bolkar Entry Add Kare</button>
+<div id="text"></div>
+
 <script>
 let entries = JSON.parse(localStorage.getItem("khata")) || [];
 
@@ -16,10 +32,8 @@ function startListening() {
   recognition.onresult = function (event) {
     const speechText = event.results[0][0].transcript;
     const date = new Date().toLocaleString("hi-IN");
-
     entries.push(date + " | " + speechText);
     localStorage.setItem("khata", JSON.stringify(entries));
-
     showEntries();
     speak("Entry save ho gayi");
   };
@@ -32,7 +46,6 @@ function startListening() {
 function showEntries() {
   const div = document.getElementById("text");
   div.innerHTML = "<h3>Sabhi Entries:</h3>";
-
   entries.forEach((e, i) => {
     div.innerHTML += `<p>${i + 1}. ${e}</p>`;
   });
@@ -46,4 +59,5 @@ function speak(msg) {
 
 showEntries();
 </script>
-
+</body>
+</html>
