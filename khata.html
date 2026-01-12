@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Khata Book</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    button {
+      font-size: 24px;
+      padding: 20px 30px;
+      border-radius: 50%;
+      border: none;
+      background: green;
+      color: white;
+      cursor: pointer;
+    }
+    #text {
+      margin-top: 20px;
+      font-size: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎙️ AI Khata Book</h1>
+<p>Mic dabao aur bolo</p>
+
+<button onclick="startListening()">🎤</button>
+
+<div id="text">Yahan bola hua likh ke aayega…</div>
+
+<script>
+function startListening() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "hi-IN";
+  recognition.start();
+
+  recognition.onresult = function(event) {
+    const speechText = event.results[0][0].transcript;
+    document.getElementById("text").innerText = speechText;
+    speak("Entry mil gayi");
+  };
+
+  recognition.onerror = function() {
+    speak("Dobara koshish kijiye");
+  };
+}
+
+function speak(message) {
+  const speech = new SpeechSynthesisUtterance(message);
+  speech.lang = "hi-IN";
+  window.speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>
